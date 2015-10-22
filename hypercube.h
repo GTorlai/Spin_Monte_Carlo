@@ -1,6 +1,9 @@
 #ifndef HYPERCUBE_H
 #define HYPERCUBE_H
 
+//hypercube.h
+//Class that build hypercube lattice in D dimensions
+
 #include <vector>
 #include <iostream>
 
@@ -13,12 +16,11 @@ class Hypercube {
         int D; //dimension
         int N; //total number of sites
 
-        //the lattice is a vector of vectors: no double counting
         vector<vector<int> > Neighbors; //neighbors with positive offsets
         vector<vector<int> > Negatives; //neighbors with negative offsets
         vector<vector<int> > Coordinates;
 
-        //public functions
+        //Functions
         Hypercube(int L_, int D_);
         void print();
          

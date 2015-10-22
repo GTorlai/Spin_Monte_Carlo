@@ -6,8 +6,7 @@
 #define PRINT_GREEN(x) std::cout << "\033[1;32m" << x << "\033[0m" << " "
 #define PRINT_YELLOW(x) std::cout << "\033[1;33m" << x << "\033[0m" << " "
 
-//constructor
-//takes the lattice linear size L, and dimension D
+//Constructor
 Hypercube::Hypercube(int L_, int D_){
 
     L = L_;
@@ -28,7 +27,7 @@ Hypercube::Hypercube(int L_, int D_){
                 pair = i+myPow(L,j);
 
             temp.push_back(pair);
-        }
+        }//j
 
         Neighbors.push_back(temp);
     }//i
@@ -46,7 +45,7 @@ Hypercube::Hypercube(int L_, int D_){
                 pair = i+myPow(L,j);
 
             Negatives[pair][j] = i;
-        }
+        }//j
 
     }//i
 
@@ -68,17 +67,16 @@ Hypercube::Hypercube(int L_, int D_){
                 else{
                     temp[j]++;
                     break;
-                }
+                }//else
             }//j
         }//if
         else
             temp[0]++;
-    }
-
+    }//i
 
 }//constructor
 
-//a print function
+//Print function
 void Hypercube::print(){
 
     cout<<"L D N \n";
@@ -89,18 +87,22 @@ void Hypercube::print(){
         cout<<i<<" ";
         for (int j=0;j<Neighbors[i].size();j++){
             PRINT_RED(Neighbors[i][j]);
-        }
+        }//j
         cout<<endl;
     }//i
+
+	cout << endl;
 
     cout<<"Negative Neighbor list:"<<endl;
     for (int i=0;i<Negatives.size();i++){
         cout<<i<<" ";
         for (int j=0;j<Negatives[i].size();j++){
             PRINT_GREEN(Negatives[i][j]);
-        }
+        }//j
         cout<<endl;
     }//i
+
+	cout << endl;
 
     cout<<"Coordinates:"<<endl;
 	for (int i=0;i<Coordinates.size();i++){
@@ -110,11 +112,13 @@ void Hypercube::print(){
             cout<<Coordinates[i][j]<<" ";
 			PRINT_YELLOW(Coordinates[i][j]);
 
-        }
+        }//j
         cout<<endl;
     }//i
 
-}
+	cout << endl;
+
+}//print
 
 //a simple function to calculate powers of an integer: not for general use
 int Hypercube::myPow (int x, int p) {
