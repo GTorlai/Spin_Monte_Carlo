@@ -31,7 +31,6 @@ public:
 	void RandomizeInteractions(double p, MTRand & random);
 	void LocalUpdate(Spins & sigma, double & T, MTRand & random);
 	void print();
-	void debug(Spins & sigma,int site);
 };
 
 #endif

@@ -19,4 +19,6 @@ int main() {
 	ising.print();
 	ising.GetEnergy(sigma);
 
+	double T = 3.0;
+	ising.LocalUpdate(sigma,T,random);
 }

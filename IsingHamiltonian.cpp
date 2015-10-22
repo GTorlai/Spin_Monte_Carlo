@@ -81,6 +81,48 @@ void IsingHamiltonian::GetEnergy(Spins & sigma) {
 }//GetEnergy
 
 
+//Perform Metropolis Update
+void IsingHamiltonian::LocalUpdate(Spins & sigma, double & T, MTRand & random) {
+
+	int site;
+	double deltaE;
+	double ran_num;
+
+	for(int k=0; k<N; k++) {
+		site = random.randInt(N-1);
+		
+		deltaE = 0.0;
+		
+		for(int i=0; i<NearestNeighbors[site].size(); i++) {
+
+			deltaE += 2*sigma.spin[site]*sigma.spin[NearestNeighbors[site][i]]*J[bonds[site][i]];
+		}//i
+
+		//cout << "Energy difference: " << deltaE << endl;
+
+		//Metropoli Algorithm
+
+		if(deltaE<0) {
+			sigma.flip(site);
+			Energy += deltaE;
+		}//if
+		
+		else {
+			ran_num = random.rand();
+			//cout << "Metropolis weight: " << exp(-deltaE/T) << "\t Random:" << ran_num << endl;
+		   if (exp(-deltaE/T) > ran_num) {
+		   		sigma.flip(site);
+				Energy += deltaE;
+		   }//if	   
+		   
+		   //Otherwise reject
+		   //else cout << " REJECT " << endl;
+		}//else
+	}//k
+
+}//LocalUpdate
+
+
 //Print Function
 void IsingHamiltonian::print() {
 
