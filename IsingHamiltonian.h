@@ -17,6 +17,7 @@ public:
 	int D;  //Dimension
 
 	double Energy;	//Total energy of the system
+    long int Magn;
 
 	vector<double> J;	//Vector of interaction couplings
 
@@ -28,6 +29,8 @@ public:
 	IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & random);
 
 	void GetEnergy(Spins & sigma);
+    void GetMagnetization(Spins & sigma);
+    
 	void RandomizeInteractions(double p, MTRand & random);
 	void LocalUpdate(Spins & sigma, double & T, MTRand & random);
 	void print();
