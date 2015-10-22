@@ -1,16 +1,22 @@
+#include "IsingHamiltonian.cpp"
+#include "param.h"
 
-#include "hypercube.cpp"
-#include "spins.cpp"
 
 int main() {
 
-    
-	Hypercube cube(4,2);
-	cube.print();
+	Params par;
+
+	par.print();
+
+    MTRand random;
+
+	Hypercube cube(3,2);
    
-	Spins sigma(20);
-	sigma.randomize();
-	sigma.print();
-   	
-    
+	Spins sigma;
+
+	IsingHamiltonian ising(sigma,cube,random);	
+	//ising.RandomizeInteractions(0.5,random);	
+	ising.print();
+	ising.GetEnergy(sigma);
+
 }
