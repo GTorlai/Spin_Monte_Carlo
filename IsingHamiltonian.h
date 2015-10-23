@@ -18,6 +18,9 @@ public:
 
 	double Energy;	//Total energy of the system
     long int Magn;
+	
+	vector<int> LocalMagn;
+	vector<vector<int> > SpinSpinCorr;
 
 	vector<double> J;	//Vector of interaction couplings
 
@@ -30,8 +33,9 @@ public:
 
 	void GetEnergy(Spins & sigma);
     void GetMagnetization(Spins & sigma);
-    
+
 	void RandomizeInteractions(double p, MTRand & random);
+	void Update(Spins & sigma,double dE, int site);
 	void LocalUpdate(Spins & sigma, double & T, MTRand & random);
     void GrowCluster(Spins & sigma, double & T, MTRand & ran, int & site);
     void GaugeUpdate(Spins & sigma, double & T, MTRand & ran);

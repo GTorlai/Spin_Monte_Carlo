@@ -11,6 +11,13 @@ IsingHamiltonian::IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & ran
 	sigma.randomize(random);
 
 	J.assign(N*D,1.0);
+	
+	//Initialize the Spin Spin Correlation matrix
+	vector<int> temp;
+	temp.assign(N,0);
+	for(int i=0; i<N; i++) {
+		SpinSpinCorr.push_back(temp);
+	}//i
 
 	//Build the nearest neighbors connections
 	NearestNeighbors.resize(N,vector<int>(2*D));
@@ -51,7 +58,6 @@ void IsingHamiltonian::RandomizeInteractions(double p, MTRand & random) {
 
 }//RandomizeInteractions
 
-
 //Computer the energy in the system
 void IsingHamiltonian::GetEnergy(Spins & sigma) {
 	
@@ -63,7 +69,6 @@ void IsingHamiltonian::GetEnergy(Spins & sigma) {
 	}//i
 
 	Energy /= 2.0;
-    //cout << "Initial Energy: " << Energy << endl;
 
 }//GetEnergy
 
@@ -75,11 +80,18 @@ void IsingHamiltonian::GetMagnetization(Spins & sigma) {
         Magn += sigma.spin[i];
     }//i
     
-    //cout << "Initial Magnetization: " << Magn << endl;
-
 }//GetMagnetization
 
+//Update Energy, Magnetization and Correlation after a spin flip
+void IsingHamiltonian::Update(Spins & sigma, double dE, int site) {
+	
+	//Update Energy
+	Energy += dE;
 
+	//Update Total Magnetization
+	Magn += 2*sigma.spin[site];
+
+}
 //Perform Metropolis Update
 void IsingHamiltonian::LocalUpdate(Spins & sigma, double & T, MTRand & random) {
 
@@ -100,8 +112,9 @@ void IsingHamiltonian::LocalUpdate(Spins & sigma, double & T, MTRand & random) {
 
 		if(deltaE<0) {
 			sigma.flip(site);
-			Energy += deltaE;
-            Magn += 2*sigma.spin[site];
+			Update(sigma,deltaE,site);
+			//Energy += deltaE;
+            //Magn += 2*sigma.spin[site];
 		}//if
 		
 		else {
@@ -109,8 +122,9 @@ void IsingHamiltonian::LocalUpdate(Spins & sigma, double & T, MTRand & random) {
 			//cout << "Metropolis weight: " << exp(-deltaE/T) << "\t Random:" << ran_num << endl;
 		   if (exp(-deltaE/T) > ran_num) {
 		   		sigma.flip(site);
-				Energy += deltaE;
-                Magn += 2*sigma.spin[site];
+				Update(sigma,deltaE,site);
+				//Energy += deltaE;
+                //Magn += 2*sigma.spin[site];
            }//if
 		   
 		   //Otherwise reject
@@ -132,8 +146,9 @@ void IsingHamiltonian::GrowCluster(Spins & sigma, double & T, MTRand & random, i
     }//i
     
     sigma.flip(site);
-    Energy += deltaE;
-    Magn += 2*sigma.spin[site];
+    Update(sigma,deltaE,site);
+	//Energy += deltaE;
+    //Magn += 2*sigma.spin[site];
     
     double ran_num;
     
