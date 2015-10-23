@@ -12,7 +12,14 @@ Measurements::Measurements(const int & N_, const Params & par){
     TOT_Mag = 0.0;
     TOT_Mag2 = 0.0;
 	TwoPointCorr = 0.0;
-}
+
+	LocalMagn.assign(N,0.0);
+	
+	for(int i=0; i<N; i++) {
+		SpinSpinCorr.push_back(LocalMagn);
+	}//i
+
+}//Constructor
 
 //Reset
 void Measurements::reset(){
@@ -22,7 +29,15 @@ void Measurements::reset(){
     TOT_Mag = 0.0;
     TOT_Mag2 = 0.0;
 	TwoPointCorr = 0.0;
-}
+
+	for(int i=0; i<N; i++) {
+		LocalMagn[i] = 0.0;
+		for(int j=0; j<N; j++) {
+			SpinSpinCorr[i][j] = 0.0;
+		}//j
+	}//i
+
+}//reset
 
 //Update the measurements
 void Measurements::record(double & energy, long int & magn, Spins & sigma){
@@ -32,6 +47,13 @@ void Measurements::record(double & energy, long int & magn, Spins & sigma){
     TOT_Mag += 1.0*abs(magn);
     TOT_Mag2 += 1.0*magn*magn;
     TwoPointCorr += 1.0*sigma.spin[0]*sigma.spin[N/2];
+ 
+ 	for(int i=0; i<N; i++) {
+		LocalMagn[i] += sigma.spin[i];
+		for(int j=0; j<N; j++) {
+			SpinSpinCorr[i][j] += sigma.spin[i]*sigma.spin[j];
+		}//j
+	}//i
 
 }//update
 
@@ -48,8 +70,15 @@ void Measurements::output(const double & T, ofstream & file){
     file<< TOT_Mag2/(1.0*MCS * N*N*ROD) <<" ";
     double susc = TOT_Mag2/(1.0*MCS*ROD) - TOT_Mag*TOT_Mag/(1.0*MCS*MCS*ROD*ROD);
     file<< susc/(T*1.0*N) <<" ";
-	file<< TwoPointCorr/(1.0*MCS*ROD);
-    file << endl;
+	file<< TwoPointCorr/(1.0*MCS*ROD)<<" ";
+    double AndersonOrder = 0.0;
+ 	for(int i=0; i<N; i++) {
+		for(int j=0; j<N; j++) {
+			AndersonOrder += SpinSpinCorr[i][j];
+		}//j
+	}//i
+	file<< AndersonOrder/(1.0*MCS*ROD*N*N+1);
+	file << endl;
     
 }//output
 

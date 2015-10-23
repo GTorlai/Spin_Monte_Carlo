@@ -23,7 +23,10 @@ public:
     double TOT_energy2;  		//energy^2
     double TOT_Mag;    			//magnetization s
     double TOT_Mag2;    		//magnetization squared
-	double TwoPointCorr;	//Spin-Spin correlation at opposite side
+	double TwoPointCorr;		//Spin-Spin correlation at opposite side
+
+	vector<vector<double> > SpinSpinCorr;	//Spin SPin correlation matrix
+    vector<double> LocalMagn;
 
     string fileName;
 
