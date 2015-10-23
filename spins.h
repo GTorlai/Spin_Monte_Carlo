@@ -25,7 +25,7 @@ class Spins {
         void resize(int N_);
         void flip(int index);
         void print();
-        void randomize();
+        void randomize(MTRand & random);
     
 };
 

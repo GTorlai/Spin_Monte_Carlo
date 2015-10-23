@@ -8,7 +8,7 @@ IsingHamiltonian::IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & ran
 	D = cube.D;
 
 	sigma.resize(N);
-	sigma.randomize();
+	sigma.randomize(random);
 
 	J.assign(N*D,1.0);
 
@@ -38,7 +38,8 @@ IsingHamiltonian::IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & ran
 
 }//constructor
 
-//Initialize the interaction parameter according to model definition
+//Initialize the interactions coupling at random between 1 and -1 according
+//to the probability p
 void IsingHamiltonian::RandomizeInteractions(double p, MTRand & random) {
 	
 	for(int i=0; i<J.size(); i++) {
@@ -62,7 +63,7 @@ void IsingHamiltonian::GetEnergy(Spins & sigma) {
 	}//i
 
 	Energy /= 2.0;
-    cout << "Initial Energy: " << Energy << endl;
+    //cout << "Initial Energy: " << Energy << endl;
 
 }//GetEnergy
 
@@ -74,7 +75,7 @@ void IsingHamiltonian::GetMagnetization(Spins & sigma) {
         Magn += sigma.spin[i];
     }//i
     
-    cout << "Initial Magnetization: " << Magn << endl;
+    //cout << "Initial Magnetization: " << Magn << endl;
 
 }//GetMagnetization
 
@@ -119,11 +120,51 @@ void IsingHamiltonian::LocalUpdate(Spins & sigma, double & T, MTRand & random) {
 
 }//LocalUpdate
 
+void IsingHamiltonian::GrowCluster(Spins & sigma, double & T, MTRand & random, int & site) {
+    
+    int newSite;
+    int State = sigma.spin[site];
+    double deltaE;
+    
+    deltaE = 0.0;
+    for(int i=0; i<NearestNeighbors[site].size(); i++) {
+        deltaE += 2*sigma.spin[site]*sigma.spin[NearestNeighbors[site][i]]*J[bonds[site][i]];
+    }//i
+    
+    sigma.flip(site);
+    Energy += deltaE;
+    Magn += 2*sigma.spin[site];
+    
+    double ran_num;
+    
+    for(int i=0; i<NearestNeighbors[site].size(); i++) {
+        newSite = NearestNeighbors[site][i];
+        
+        if (sigma.spin[newSite] == State) {
+            ran_num=random.rand();
+            //if(m_rand < 1-exp(2*J[OnesConnectedToZero[site][i]]/T)) {
+            if(ran_num < 1-exp(2/T)) {
+                GrowCluster(sigma,T,random,newSite);
+            }
+        }
+    }
+    
+}
+//Calculate the Wolff cluster update
+void IsingHamiltonian::GaugeUpdate(Spins & sigma, double & T, MTRand & random){
+    
+    int site; //random site where the cluster starts
+    
+    site = random.randInt(N-1);
+    
+    GrowCluster(sigma,T,random,site);
+    
+}
 
 //Print Function
 void IsingHamiltonian::print() {
 
-	cout << "...printing nearest neighbors:" << endl << endl;
+/*	cout << "...printing nearest neighbors:" << endl << endl;
 	
 	for(int i=0; i<NearestNeighbors.size(); i++) {
 		cout << "Site # ";
@@ -156,14 +197,15 @@ void IsingHamiltonian::print() {
 	
 	cout << endl;
 	cout << "...printing interactions:" << endl << endl;
-
+*/
 	for(int i=0; i<J.size(); i++) {
-		cout << "Bond # ";
-	    PRINT_RED(i);
-		cout << "  -> ";
-		cout << "J = ";
+		//cout << "Bond # ";
+	    //PRINT_RED(i);
+		//cout << "  -> ";
+		//cout << "J = ";
 	   	PRINT_GREEN(J[i]);
-	    cout << endl;
+		cout << " ";
+	    //cout << endl;
 
 	}//i
     

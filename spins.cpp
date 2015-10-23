@@ -1,4 +1,5 @@
 #include "spins.h"
+#include "MersenneTwister.h"
 
 //Constructor 1
 Spins::Spins(){
@@ -26,14 +27,13 @@ void Spins::resize(int N_){
 }
 
 //Randomize the spin values
-void Spins::randomize(){
+void Spins::randomize(MTRand & random){
 
-    MTRand irand(129345); //random number 
 
     int ising_spin;
     
     for (int i = 0; i<spin.size(); i++){
-        ising_spin = 2*irand.randInt(1)-1;
+        ising_spin = 2*random.randInt(1)-1;
 
         spin.at(i) = ising_spin;
     }//i

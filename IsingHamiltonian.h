@@ -33,6 +33,8 @@ public:
     
 	void RandomizeInteractions(double p, MTRand & random);
 	void LocalUpdate(Spins & sigma, double & T, MTRand & random);
+    void GrowCluster(Spins & sigma, double & T, MTRand & ran, int & site);
+    void GaugeUpdate(Spins & sigma, double & T, MTRand & ran);
 	void print();
 };
 

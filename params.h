@@ -16,7 +16,8 @@ class Params
         double Tstep;      //Temperature step
         int EQL;     //the number of equilibration steps
         int MCS;     //the number of Monte Carlo steps
-        int nBin;    //number of production bins
+        int ROD;
+		int nBin;    //number of production bins
         long SEED;   //the random number seed
 
         Params();
@@ -37,6 +38,7 @@ Params::Params(){
     pfin >> Tstep;
     pfin >> EQL;
     pfin >> MCS;
+	pfin >> ROD;
     pfin >> nBin;
     pfin >> SEED;
     pfin.close();
@@ -50,6 +52,7 @@ void Params::print(){
     cout<<"Dimension "<<Dim<<endl;
     cout<<"# Equil steps "<<EQL<<endl;
     cout<<"# MC steps "<<MCS<<endl;
+	cout<<"# Realization of disorder"<<ROD<<endl;
     cout<<"# data bins "<<nBin<<endl;
     cout<<"RNG seed "<<SEED<<endl;
 
