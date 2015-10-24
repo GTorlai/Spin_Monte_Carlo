@@ -28,32 +28,34 @@ int main() {
     
 	//Create file for data
     //measure.createFileName(par.nX,par.Dim,"Ising_ferromagnet",par.MCS);
-    measure.createFileName(par.nX,par.Dim,"Ising_random",par.MCS);
+    measure.createFileName(par.nX,par.Dim,"Ising_ferromagnet",par.MCS);
  
 	ofstream fileData(measure.fileName.c_str());
     
-	int counter = -1; 	//Progress counter
+	//int counter = -1; 	//Progress counter
 	double T;
-    //for(T = par.Tlow; T<par.Thigh; T += par.Tstep) {
-    for(double p = 0.05; p < 0.15; p += 0.01) {  
+    for(T = par.Tlow; T<par.Thigh; T += par.Tstep) {
+    //for(double p = 0.05; p < 0.15; p += 0.01) {  
   		
-		counter++;
-		cout << "..." << counter/(par.Thigh-par.Tlow)/par.Tstep << "% progress " << endl;
+		//counter++;
+		//cout << "..." << counter/(par.Thigh-par.Tlow)/par.Tstep << "% progress " << endl;
 		
-		T = 2/log((1-p)/p);
+		cout << "Temperature: :" << T << endl;
+		//T = 1.0/log((1-p)/p);
 
 		//Reset the observables values
 		measure.reset();
 
 		for(int r=0; r<par.ROD; r++) {
 			
-			//For the random bond Ising model
-			ising.RandomizeInteractions(p,random);
+			//RANDOM BOND ISING MODEL ONLY
+			//ising.RandomizeInteractions(p,random);
 			//ising.print();
-			sigma.randomize(random);
+			//sigma.randomize(random);
 			//sigma.print();
-			ising.GetEnergy(sigma);
-			ising.GetMagnetization(sigma);
+			//ising.GetEnergy(sigma);
+			//ising.GetMagnetization(sigma);
+
 
 			//Equilibrate the system
 			for(int k=0; k<par.EQL; k++) {
@@ -68,6 +70,10 @@ int main() {
 	        }//k
 		
 		}//ROD
+		
+		//Calculate correlation lengths
+		measure.GetCorrelationLength(par.nX,cube.Coordinates);
+		
 
 		//Print measurements on file
         measure.output(T,fileData);
