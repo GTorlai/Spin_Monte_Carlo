@@ -41,7 +41,7 @@ public:
 
     Measurements(const int & N_, const Params & par);
     
-    void createFileName(int L_, int D_, const char* model, int MCS_);
+    void createFileName(Params & par, const char* model);
     void reset();
     void record(double & energy, long int & magn, Spins & sigma);
     void GetCorrelationLength(const int & L,vector<vector<int> > &coordinate);

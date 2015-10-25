@@ -163,14 +163,16 @@ void Measurements::output(const double & T, ofstream & file){
 }//output
 
 //Create name-file
-void Measurements::createFileName(int L_, int D_, const char* model, int MCS_) {
+void Measurements::createFileName(Params & par,  const char* model) {
     
     fileName.clear();
     stringstream str;
     
-    str << "MC_" << D_ << "D_" << model;
-    str << "_L" << L_;
-    str << "_MCS" << MCS_/1000;
+    str << "MC_" << par.Dim << "D_" << model;
+    str << "_L" << par.nX;
+	if(par.ROD > 1) 
+		str << "_ROD" << par.ROD;
+    str << "_MCS" << par.MCS/1000;
     str << "k.dat";
     
     fileName = str.str();
