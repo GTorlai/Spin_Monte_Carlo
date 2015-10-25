@@ -2,8 +2,24 @@
 #include "params.h"
 #include "measurements.cpp"
 
-int main() {
+int main(int argc, char *argv[]) {
 
+    double p;
+    double T;
+    char* model;
+    
+    for (int i=1;i<argc;i++) {
+        if (strcmp(argv[i],"-p") == 0) {
+            p = double(atof(argv[i+1]));
+        }//if
+        if (strcmp(argv[i],"-T") == 0) {
+            T = double(atof(argv[i+1]));
+        }//if
+        else if (strcmp(argv[i], "-model") == 0) {
+            model = argv[i+1];
+        }//else if
+    }//i
+    
 	//Contruct parameter class
 	Params par;
 
@@ -12,7 +28,7 @@ int main() {
 
 	//Contruct hypercube lattice
 	Hypercube cube(par.nX,par.Dim);
-   
+    
 	//Contruct spin class
 	Spins sigma;
 
@@ -28,19 +44,19 @@ int main() {
     
 	//Create file for data
     //measure.createFileName(par.nX,par.Dim,"Ising_ferromagnet",par.MCS);
-    measure.createFileName(par.nX,par.Dim,"Ising_ferromagnet",par.MCS);
+    measure.createFileName(par,model);
  
 	ofstream fileData(measure.fileName.c_str());
     
 	//int counter = -1; 	//Progress counter
-	double T;
-    for(T = par.Tlow; T<par.Thigh; T += par.Tstep) {
-    //for(double p = 0.05; p < 0.15; p += 0.01) {  
+    //for(T = par.Tlow; T<par.Thigh; T += par.Tstep) {
+    //for(p = 0.05; p < 0.15; p += 0.01) {
   		
 		//counter++;
 		//cout << "..." << counter/(par.Thigh-par.Tlow)/par.Tstep << "% progress " << endl;
 		
 		cout << "Temperature: :" << T << endl;
+		//cout << "Disorder strength: " << p << endl;
 		//T = 1.0/log((1-p)/p);
 
 		//Reset the observables values
@@ -50,9 +66,7 @@ int main() {
 			
 			//RANDOM BOND ISING MODEL ONLY
 			//ising.RandomizeInteractions(p,random);
-			//ising.print();
 			//sigma.randomize(random);
-			//sigma.print();
 			//ising.GetEnergy(sigma);
 			//ising.GetMagnetization(sigma);
 
@@ -74,11 +88,11 @@ int main() {
 		//Calculate correlation lengths
 		measure.GetCorrelationLength(par.nX,cube.Coordinates);
 		
-
 		//Print measurements on file
         measure.output(T,fileData);
+		sigma.print();
     
-	}//T
+	//}//T-p
     
 	fileData.close();
 
