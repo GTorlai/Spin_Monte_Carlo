@@ -1,5 +1,5 @@
 #include "measurements.h"
-
+#include <stdlib.h>
 //Constructor
 Measurements::Measurements(const int & N_, const Params & par){
 
@@ -62,7 +62,7 @@ void Measurements::record(double & energy, long int & magn, Spins & sigma){
 }//update
 
 //Computer different correlation lengths
-void Measurements::GetCorrelationLength(const int & L, vector<vector<int> > &coordinate) {	
+void Measurements::GetCorrelationLength(const int & L, vector<vector<int> > &coordinate) {
 
 	double q1 = 2*PI/L;
 	double q2 = 4*PI/L;	
@@ -132,10 +132,34 @@ void Measurements::GetCorrelationLength(const int & L, vector<vector<int> > &coo
 }//GetCorrelationLength
 
 
+void Measurements::printHeaders(ofstream & file) {
+	
+	file << "#";
+	
+	file << "  " << "T";
+	file << "  " << "E";
+	file << "  " << "Cv";
+	file << "  " << "m";
+	file << "  " << "susc";
+	file << "  " << "2pCorr";
+	file << "  " << "anderson";
+	file << "  " << "corrA";
+	file << "  " << "corrB";
+	file << "  " << "corrC";
+	file << "  " << "corrD";
+	file << "  " << "binder";
+
+}
 //Write average on file
-void Measurements::output(const double & T, ofstream & file){
+void Measurements::output(const double & simPar, ofstream & file){
     
-    file<< T <<" ";
+    
+	//file<< simPar <<" ";					//ISING FERROMAGNET
+	//double T = simPar;					//ISING FERROMAGNET
+	
+	file << simPar << " ";					//ISING RANDOM
+	double T = 1.0/log((1-simPar)/simPar);	//ISING RANDOM
+
     file<< TOT_energy/(1.0*MCS * N*ROD) <<" ";
     //file<< TOT_energy2/(1.0*MCS * N * N*ROD) <<" ";
     double Cv = TOT_energy2/(1.0*MCS*ROD) - TOT_energy*TOT_energy/(1.0*MCS*MCS*ROD*ROD);
@@ -163,17 +187,20 @@ void Measurements::output(const double & T, ofstream & file){
 }//output
 
 //Create name-file
-void Measurements::createFileName(Params & par,  const char* model) {
+void Measurements::createFileName(Params & par,  const char* model, double simPar) {
     
     fileName.clear();
     stringstream str;
     
-    str << "MC_" << par.Dim << "D_" << model;
+    str << "MC_";
+	if(simPar != 0.0) 
+		str << simPar << "_";	
+	str<< par.Dim << "D_" << model;
     str << "_L" << par.nX;
 	if(par.ROD > 1) 
 		str << "_ROD" << par.ROD;
     str << "_MCS" << par.MCS/1000;
-    str << "k.dat";
+    str << "k.txt";
     
     fileName = str.str();
 }
