@@ -41,12 +41,12 @@ public:
 
     Measurements(const int & N_, const Params & par);
     
-    void createFileName(Params & par, const char* model, double simPar);
+    void createFileName(Params & par, const char* model, int simNum);
     void reset();
     void printHeaders(ofstream & file);
 	void record(double & energy, long int & magn, Spins & sigma);
     void GetCorrelationLength(const int & L,vector<vector<int> > &coordinate);
-	void output(const double & T, ofstream & file);
+	void output(const double simPar, const char* model, ofstream & file);
  
 };
 

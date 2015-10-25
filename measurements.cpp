@@ -1,5 +1,7 @@
 #include "measurements.h"
 #include <stdlib.h>
+#include <string.h>
+
 //Constructor
 Measurements::Measurements(const int & N_, const Params & par){
 
@@ -148,17 +150,23 @@ void Measurements::printHeaders(ofstream & file) {
 	file << "  " << "corrC";
 	file << "  " << "corrD";
 	file << "  " << "binder";
-
+	file << endl;
 }
+
+
 //Write average on file
-void Measurements::output(const double & simPar, ofstream & file){
+void Measurements::output(const double simPar, const char* model, ofstream & file){
     
-    
-	//file<< simPar <<" ";					//ISING FERROMAGNET
-	//double T = simPar;					//ISING FERROMAGNET
+    double T; 
+	if(strcmp(model,"Ising_Ferromagnet") ==0) {
+		file<< simPar <<" ";	
+		T = simPar;
+	}
 	
-	file << simPar << " ";					//ISING RANDOM
-	double T = 1.0/log((1-simPar)/simPar);	//ISING RANDOM
+	if(strcmp(model,"Ising_Random") == 0) {
+		file << simPar << " ";				
+		T = 1.0/log((1-simPar)/simPar);	
+	}
 
     file<< TOT_energy/(1.0*MCS * N*ROD) <<" ";
     //file<< TOT_energy2/(1.0*MCS * N * N*ROD) <<" ";
@@ -187,20 +195,24 @@ void Measurements::output(const double & simPar, ofstream & file){
 }//output
 
 //Create name-file
-void Measurements::createFileName(Params & par,  const char* model, double simPar) {
+void Measurements::createFileName(Params & par,  const char* model, int simNum) {
     
     fileName.clear();
     stringstream str;
     
     str << "MC_";
-	if(simPar != 0.0) 
-		str << simPar << "_";	
 	str<< par.Dim << "D_" << model;
     str << "_L" << par.nX;
 	if(par.ROD > 1) 
 		str << "_ROD" << par.ROD;
-    str << "_MCS" << par.MCS/1000;
-    str << "k.txt";
+    str << "_MCS" << par.MCS/1000 << "_";
+	if(simNum < 10) 
+		str << "00" << simNum;
+	else if(simNum < 100)
+		str << "0" << simNum;
+	else if(simNum < 1000)
+		str << simNum;
+    str << ".txt";
     
     fileName = str.str();
 }
