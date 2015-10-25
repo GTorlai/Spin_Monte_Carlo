@@ -1,11 +1,16 @@
 #include "IsingHamiltonian.cpp"
 #include "params.h"
 #include "measurements.cpp"
+#include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char *argv[]) {
 
-    double p;
-    double T;
+    //Contruct parameter class
+    Params par;
+    
+    double p = 0.0;
+    double T = 0.0;
     char* model;
     
     for (int i=1;i<argc;i++) {
@@ -15,13 +20,13 @@ int main(int argc, char *argv[]) {
         if (strcmp(argv[i],"-T") == 0) {
             T = double(atof(argv[i+1]));
         }//if
+        if (strcmp(argv[i],"-L") == 0) {
+            par.nX = atoi(argv[i+1]);
+        }//if
         else if (strcmp(argv[i], "-model") == 0) {
             model = argv[i+1];
         }//else if
     }//i
-    
-	//Contruct parameter class
-	Params par;
 
 	//Contruct random number generator
     MTRand random(par.SEED);
@@ -43,33 +48,28 @@ int main(int argc, char *argv[]) {
     Measurements measure(sigma.N,par);
     
 	//Create file for data
-    //measure.createFileName(par.nX,par.Dim,"Ising_ferromagnet",par.MCS);
-    measure.createFileName(par,model);
- 
+    //measure.createFileName(par,model,T);	//ISING FERROMAGNET
+ 	measure.createFileName(par,model,p);	//ISING RANDOM
+
 	ofstream fileData(measure.fileName.c_str());
     
-	//int counter = -1; 	//Progress counter
-    //for(T = par.Tlow; T<par.Thigh; T += par.Tstep) {
-    //for(p = 0.05; p < 0.15; p += 0.01) {
+    //for(T = par.Tlow; T<par.Thigh; T += par.Tstep) { 	//ISING FERROMAGNET
+    //for(p = 0.05; p < 0.15; p += 0.01) {				//ISING RANDOM
   		
-		//counter++;
-		//cout << "..." << counter/(par.Thigh-par.Tlow)/par.Tstep << "% progress " << endl;
-		
-		cout << "Temperature: :" << T << endl;
+		//cout << "Temperature: :" << T << endl;
 		//cout << "Disorder strength: " << p << endl;
-		//T = 1.0/log((1-p)/p);
+
+		T = 1.0/log((1-p)/p);		//ISING RANDOM
 
 		//Reset the observables values
 		measure.reset();
 
 		for(int r=0; r<par.ROD; r++) {
 			
-			//RANDOM BOND ISING MODEL ONLY
-			//ising.RandomizeInteractions(p,random);
-			//sigma.randomize(random);
-			//ising.GetEnergy(sigma);
-			//ising.GetMagnetization(sigma);
-
+			ising.RandomizeInteractions(p,random);	//ISING RANDOM
+			sigma.randomize(random);					//ISING RANDOM
+			ising.GetEnergy(sigma);					//ISING RANDOM
+			ising.GetMagnetization(sigma);			//ISING RANDOM
 
 			//Equilibrate the system
 			for(int k=0; k<par.EQL; k++) {
@@ -89,8 +89,10 @@ int main(int argc, char *argv[]) {
 		measure.GetCorrelationLength(par.nX,cube.Coordinates);
 		
 		//Print measurements on file
-        measure.output(T,fileData);
-		sigma.print();
+        //measure.output(T,fileData);		//ISING FERROMAGNET
+		measure.output(p,fileData);		//ISING RANDOM
+
+		//sigma.print();
     
 	//}//T-p
     
