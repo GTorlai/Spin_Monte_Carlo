@@ -1,0 +1,4 @@
+class prova {
+
+	int D;
+}
