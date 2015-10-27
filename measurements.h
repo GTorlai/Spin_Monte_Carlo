@@ -14,13 +14,13 @@
 
 class Measurements {
 
-private:
+	private:
     
-    int N;
-    int MCS;
-    int ROD;
+    	int N;
+    	int MCS;
+    	int ROD;
     
-public:
+	public:
 
 	double TOT_energy;   		//energy
 	double TOT_energy2;  		//energy^2
