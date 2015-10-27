@@ -22,17 +22,16 @@ private:
     
 public:
 
-    double TOT_energy;   		//energy
-    double TOT_energy2;  		//energy^2
-    double TOT_Mag;    			//magnetization s
-    double TOT_Mag2;    		//magnetization squared
+	double TOT_energy;   		//energy
+	double TOT_energy2;  		//energy^2
+	double TOT_Mag;    			//magnetization s
+	double TOT_Mag2;    		//magnetization squared
 	double TOT_Mag4;			//Fourth power of magnetization
 
 	double TwoPointCorr;		//Spin-Spin correlation at opposite side
-	double CorrLengthA;			//Correlation length using Sandvik def a
-	double CorrLengthB;			//Correlation length using Sandvik def b
-	double CorrLengthC;			//Connected correlation 
-	double CorrLengthD;			//Connected correlation squared
+	double CorrLength;			//Correlation length using Sandvik def a
+	//double CorrLength2;		//Correlation length using Sandvik def b
+	double CorrLengthConnected;	//Connected correlation squared
 
 	vector<vector<double> > SpinSpinCorr;	//Spin SPin correlation matrix
     vector<double> LocalMagn;
@@ -47,7 +46,7 @@ public:
 	void record(double & energy, long int & magn, Spins & sigma);
     void GetCorrelationLength(const int & L,vector<vector<int> > &coordinate);
 	void output(const double simPar, const char* model, ofstream & file);
- 
+
 };
 
 #endif
