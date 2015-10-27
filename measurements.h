@@ -16,7 +16,7 @@ class Measurements {
 
 	
 	private:
-    
+
 		int N;
 		int MCS;
 		int ROD;
