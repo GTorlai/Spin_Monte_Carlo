@@ -1,6 +1,8 @@
 class prova {
+	
 
-	int D;
+    int D;
 
-	prova();
+    prova();
+	void t();
 }
