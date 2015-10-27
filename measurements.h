@@ -14,6 +14,7 @@
 
 class Measurements {
 
+	
 	private:
     
 		int N;
