@@ -45,7 +45,8 @@ void Measurements::reset()
 }//reset
 
 //Update the measurements
-void Measurements::record(double & energy, long int & magn, Spins & sigma){
+void Measurements::record(double & energy, long int & magn, Spins & sigma)
+{
 
 	TOT_energy += energy;
 	TOT_energy2 += energy * energy;
