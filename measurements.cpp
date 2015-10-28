@@ -25,7 +25,8 @@ Measurements::Measurements(const int & N_, const Params & par){
 }//Constructor
 
 //Reset
-void Measurements::reset(){
+void Measurements::reset()
+{
 
 	TOT_energy = 0.0;
 	TOT_energy2 = 0.0;
