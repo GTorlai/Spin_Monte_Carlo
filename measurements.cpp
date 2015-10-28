@@ -25,8 +25,7 @@ Measurements::Measurements(const int & N_, const Params & par){
 }//Constructor
 
 //Reset
-void Measurements::reset()
-{
+void Measurements::reset() {
 
 	TOT_energy = 0.0;
 	TOT_energy2 = 0.0;
@@ -45,8 +44,7 @@ void Measurements::reset()
 }//reset
 
 //Update the measurements
-void Measurements::record(double & energy, long int & magn, Spins & sigma)
-{
+void Measurements::record(double & energy, long int & magn, Spins & sigma) {
 
 	TOT_energy += energy;
 	TOT_energy2 += energy * energy;
