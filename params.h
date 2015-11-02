@@ -6,8 +6,7 @@
 using namespace std;
 
 //Simple class to read in the simulation parameters from a file
-class Params
-{
+class Params {
     public:
         int nX;      //linear size of lattice
         int Dim;      //dimension of lattice
@@ -29,7 +28,7 @@ class Params
 Params::Params(){
     //initializes commonly used parameters from a file
     ifstream pfin;
-    pfin.open("params.dat");
+    pfin.open("params.p");
 
     pfin >> nX;
     pfin >> Dim;
@@ -52,7 +51,7 @@ void Params::print(){
     cout<<"Dimension "<<Dim<<endl;
     cout<<"# Equil steps "<<EQL<<endl;
     cout<<"# MC steps "<<MCS<<endl;
-	cout<<"# Realization of disorder"<<ROD<<endl;
+    cout<<"# Realization of disorder"<<ROD<<endl;
     cout<<"# data bins "<<nBin<<endl;
     cout<<"RNG seed "<<SEED<<endl;
 

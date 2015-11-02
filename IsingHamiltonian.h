@@ -13,33 +13,35 @@ class IsingHamiltonian {
 
 public:
 
-	int N;	//Number of lattice sites		
-	int D;  //Dimension
+    int N;	//Number of lattice sites		
+    int D;  //Dimension
 
-	double Energy;	//Total energy of the system
+    double Energy;	//Total energy of the system
     long int Magn;
 	
-	vector<int> LocalMagn;
-	vector<vector<int> > SpinSpinCorr;
+    vector<int> LocalMagn;
+    vector<vector<int> > SpinSpinCorr;
 
-	vector<double> J;	//Vector of interaction couplings
+    vector<double> J;	//Vector of interaction couplings
 
-	vector<vector<int> > NearestNeighbors;
+    vector<vector<int> > NearestNeighbors;
 
-	vector<vector<int> > bonds;
+    vector<vector<int> > bonds;
 
-	//Functions
-	IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & random);
+    //Functions
+    IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & random);
 
-	void GetEnergy(Spins & sigma);
+    void GetEnergy(Spins & sigma);
     void GetMagnetization(Spins & sigma);
 
-	void RandomizeInteractions(double p, MTRand & random);
-	void Update(Spins & sigma,double dE, int site);
-	void LocalUpdate(Spins & sigma, double & T, MTRand & random);
+    void RandomizeInteractions(double p, MTRand & random);
+    void Update(Spins & sigma,double dE, int site);
+    void SimulatedAnnealing(Spins & sigma, double T_f, MTRand & random);
+
+    void LocalUpdate(Spins & sigma, double & T, MTRand & random);
     void GrowCluster(Spins & sigma, double & T, MTRand & ran, int & site);
     void GaugeUpdate(Spins & sigma, double & T, MTRand & ran);
-	void print();
+    void print();
 };
 
 #endif

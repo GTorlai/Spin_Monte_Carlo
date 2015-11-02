@@ -29,7 +29,6 @@ void Spins::resize(int N_){
 //Randomize the spin values
 void Spins::randomize(MTRand & random){
 
-
     int ising_spin;
     
     for (int i = 0; i<spin.size(); i++){
@@ -58,3 +57,12 @@ void Spins::print(){
     cout<<endl;
 
 }//print
+
+//Print configuration on file
+void Spins::filePrint(ofstream & file){
+
+   for (int i=0;i<spin.size();i++){
+        file<<(spin[i]+1)/2<<" ";
+    }//i
+    file<<endl; 
+}
