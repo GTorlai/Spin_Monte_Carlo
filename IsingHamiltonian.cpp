@@ -161,12 +161,12 @@ void IsingHamiltonian::GrowCluster(Spins & sigma, double & T, MTRand & random, i
     double deltaE;
     
     deltaE = 0.0;
-    for(int i=0; i<NearestNeighbors[site].size(); i++) {
-        deltaE += 2*sigma.spin[site]*sigma.spin[NearestNeighbors[site][i]]*J[bonds[site][i]];
-    }//i
+    //for(int i=0; i<NearestNeighbors[site].size(); i++) {
+    //    deltaE += 2*sigma.spin[site]*sigma.spin[NearestNeighbors[site][i]]*J[bonds[site][i]];
+    //}//i
     
     sigma.flip(site);
-    Update(sigma,deltaE,site);
+    //Update(sigma,deltaE,site);
     //Energy += deltaE;
     //Magn += 2*sigma.spin[site];
     
@@ -178,7 +178,7 @@ void IsingHamiltonian::GrowCluster(Spins & sigma, double & T, MTRand & random, i
         if (sigma.spin[newSite] == State) {
             ran_num=random.rand();
             //if(m_rand < 1-exp(2*J[OnesConnectedToZero[site][i]]/T)) {
-            if(ran_num < 1-exp(2/T)) {
+            if(ran_num < 1-exp(-2.0/T)) {
                 GrowCluster(sigma,T,random,newSite);
             }
         }
@@ -190,31 +190,32 @@ void IsingHamiltonian::GaugeUpdate(Spins & sigma, double & T, MTRand & random){
     
     int site; //random site where the cluster starts
     
-    site = random.randInt(N-1);
-    
-    GrowCluster(sigma,T,random,site);
-    
+    for (int i=0; i<N; i++) {
+        site = random.randInt(N-1);
+        GrowCluster(sigma,T,random,site);
+    }
 }
 
 //Print Function
 void IsingHamiltonian::print() {
 
-/*    cout << "...printing nearest neighbors:" << endl << endl;
+    //cout << "...printing nearest neighbors:" << endl << endl;
     
     for(int i=0; i<NearestNeighbors.size(); i++) {
     	cout << "Site # ";
         PRINT_RED(i);
     	cout << "  -> ";
-    	
+        //cout << i << " ";
     	for(int j=0; j<2*D; j++) {
     	
     	    PRINT_GREEN(NearestNeighbors[i][j]);
-    	    cout << " ";
+            //cout << NearestNeighbors[i][j];
+            cout << " ";
     	}//j
     
     	cout << endl;
     }//i
-    
+
     cout << endl;
     cout << "...printing bonds:" << endl << endl;
     
@@ -232,7 +233,7 @@ void IsingHamiltonian::print() {
     
     cout << endl;
     cout << "...printing interactions:" << endl << endl;
-*/
+
     for(int i=0; i<J.size(); i++) {
 	//cout << "Bond # ";
 	//PRINT_RED(i);
