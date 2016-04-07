@@ -16,7 +16,7 @@ class Params {
         int EQL;     //the number of equilibration steps
         int MCS;     //the number of Monte Carlo steps
         int ROD;
-		int nBin;    //number of production bins
+	int nBin;    //number of production bins
         long SEED;   //the random number seed
 
         Params();
@@ -37,7 +37,7 @@ Params::Params(){
     pfin >> Tstep;
     pfin >> EQL;
     pfin >> MCS;
-	pfin >> ROD;
+    pfin >> ROD;
     pfin >> nBin;
     pfin >> SEED;
     pfin.close();

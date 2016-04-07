@@ -41,6 +41,22 @@ IsingHamiltonian::IsingHamiltonian(Spins & sigma, Hypercube & cube, MTRand & ran
 	    bonds[i][j+D] = D*back_site + j;
         }//j
     }//i
+    
+    //Annealed Importance Sampling Parameters
+    
+    K = 1000;
+    M = 10;
+
+    for (int i=0; i< K/10; i++) {
+        beta.push_back(0.5*i/(0.1*K));
+    }
+    for (int i=0; i< 4*K/10; i++) {
+        beta.push_back(0.5+0.4*i/(0.4*K));
+    }
+     for (int i=0; i< K/2; i++) {
+        beta.push_back(0.9+0.1*i/(0.5*K));
+    }
+    beta.push_back(1.0);
 
 }//constructor
 
@@ -194,6 +210,61 @@ void IsingHamiltonian::GaugeUpdate(Spins & sigma, double & T, MTRand & random){
         site = random.randInt(N-1);
         GrowCluster(sigma,T,random,site);
     }
+}
+
+
+//Sweep of AIS
+double IsingHamiltonian::aisSweep(Spins & sigma,MTRand & random,double T,double T0) {
+
+    double W = 0.0;
+    double p_new;
+    double p_old;
+    double T_old;
+    double T_new;
+
+    for (int k=0; k<K; k++) {
+
+        T_old = (T0*T)/((1-beta[k-1])*T + beta[k-1]*T0);
+        T_new = (T0*T)/((1-beta[k])*T + beta[k]*T0);
+
+        LocalUpdate(sigma, T_new,random);    
+        GetEnergy(sigma);
+
+        p_new = exp(-1.0*Energy/T_new);
+        p_old = exp(-1.0*Energy/T_old);
+
+        W += log(p_new) - log(p_old);
+    }
+
+    return W;
+
+}
+
+void IsingHamiltonian::AnnealedImportanceSampling(Spins & sigma, MTRand & random, double T, double T0){
+
+    
+    double w = 0.0;
+    int eq = 10000;
+    double sweep;
+
+    for (int i=0;i<M;i++) {
+
+        sigma.randomize(random);
+        
+        for (int i=0; i<eq;i++) {
+            LocalUpdate(sigma,T0,random);
+        }
+        
+        sweep = aisSweep(sigma,random,T,T0);
+        w += sweep;
+   }
+    
+    w /= M;
+
+    cout << "Ratio: " << w << endl << endl;
+
+
+
 }
 
 //Print Function

@@ -75,18 +75,19 @@ void Measurements::GetCorrelationLength(const int & L, vector<vector<int> > &coo
     ConnectedCorr.resize(N,vector<double>(N));
 	
     //Get Average of correlation and local magnetization
-    for(int i=0; i<N; i++) {
-    	LocalMagn[i] /= 1.0*MCS*ROD;
-    	for(int j=0; j<N; j++) {
-    	    ConnectedCorr[i][j] = SpinSpinCorr[i][j]/(1.0*MCS*ROD);
-    	}//i
-    }//j
+    //for(int i=0; i<N; i++) {
+    //	LocalMagn[i] /= 1.0*MCS*ROD;
+    //	for(int j=0; j<N; j++) {
+    //	    ConnectedCorr[i][j] = SpinSpinCorr[i][j]/(1.0*MCS*ROD);
+    //	}//i
+    //}//j
     
     
     //CORRELATION LENGTH A
     for(int i=0; i<N; i++) {
     	for(int j=0; j<N; j++) {
-    	    suscept0 += ConnectedCorr[i][j];
+    	    ConnectedCorr[i][j] = SpinSpinCorr[i][j]/(1.0*MCS*ROD);
+            suscept0 += ConnectedCorr[i][j];
     	    suscept1 += ConnectedCorr[i][j]*cos(q1*(coordinate[i][0]-coordinate[j][0])); 	
     	}//i
     }//j
@@ -109,18 +110,18 @@ void Measurements::GetCorrelationLength(const int & L, vector<vector<int> > &coo
     */
 
     //CORRELATION LENGTH CONNECTED
-    suscept0 = 0.0;
-    suscept1 = 0.0;
+    //suscept0 = 0.0;
+    //suscept1 = 0.0;
 
-    for(int i=0; i<N; i++) {
+    /*for(int i=0; i<N; i++) {
     	for(int j=0; j<N; j++) {
             suscept0 += (ConnectedCorr[i][j]-LocalMagn[i]*LocalMagn[j])*(ConnectedCorr[i][j]-LocalMagn[i]*LocalMagn[j]);	
 		suscept1 += (ConnectedCorr[i][j]-LocalMagn[i]*LocalMagn[j])*cos(q1*(coordinate[i][0]-coordinate[j][0]))*(ConnectedCorr[i][j]-LocalMagn[i]*LocalMagn[j]);
         }//i
     }//j
-
+    
     CorrLengthConnected = (1.0/(2.0*sin(q1/2.0)))*sqrt(suscept0/suscept1 - 1.0)/L;
-
+    */
 }//GetCorrelationLength
 
 
@@ -166,17 +167,17 @@ void Measurements::output(const double simPar, const char* model, ofstream & fil
     //file<< TOT_Mag2/(1.0*MCS * N*N*ROD) <<" ";
     double susc = TOT_Mag2/(1.0*MCS*ROD) - TOT_Mag*TOT_Mag/(1.0*MCS*MCS*ROD*ROD);
     file<< susc/(T*1.0*N) <<" ";
-    file<< TwoPointCorr/(1.0*MCS*ROD)<<" ";
-    double AndersonOrder = 0.0;
-    for(int i=0; i<N; i++) {
-    	for(int j=0; j<N; j++) {
-    		AndersonOrder += SpinSpinCorr[i][j];
-    	}//j
-    }//i
-    file<< AndersonOrder/(1.0*MCS*ROD*N*N) <<" ";
+    //file<< TwoPointCorr/(1.0*MCS*ROD)<<" ";
+    //double AndersonOrder = 0.0;
+    //for(int i=0; i<N; i++) {
+    //	for(int j=0; j<N; j++) {
+    //		AndersonOrder += SpinSpinCorr[i][j];
+    //	}//j
+    //}//i
+    //file<< AndersonOrder/(1.0*MCS*ROD*N*N) <<" ";
     file<< CorrLength << " ";
     //file<< CorrLength2 << " ";
-    file<< CorrLengthConnected << " ";
+    //file<< CorrLengthConnected << " ";
     double BinderCumulant = 1.5*(1.0-(1.0/3.0)*(TOT_Mag4/(TOT_Mag2*TOT_Mag2))*ROD*MCS);
     file<< BinderCumulant;
     file << endl;
@@ -192,9 +193,10 @@ void Measurements::createFileName(Params & par,  const char* model, int simNum) 
     str << "MC_";
     str<< par.Dim << "D_" << model;
     str << "_L" << par.nX;
-    if(par.ROD > 1) 
-        str << "_ROD" << par.ROD;
-    str << "_MCS" << par.MCS/1000 << "_";
+    str << "_n";
+    //if(par.ROD > 1) 
+    //    str << "_ROD" << par.ROD;
+    //str << "_MCS" << par.MCS/1000 << "_";
     if(simNum < 10) 
     	str << "00" << simNum;
     else if(simNum < 100)

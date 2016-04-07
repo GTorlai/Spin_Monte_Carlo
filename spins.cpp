@@ -61,8 +61,9 @@ void Spins::print(){
 //Print configuration on file
 void Spins::filePrint(ofstream & file){
 
-   for (int i=0;i<spin.size();i++){
+    for (int i=0;i<spin.size();i++){
         file<<(spin[i]+1)/2<<" ";
     }//i
     file<<endl; 
+
 }
